@@ -1,17 +1,26 @@
 import React from "react";
+import unsplash from "../api/unsplash";
 import SearchBar from "./SearchBar";
 
 
 class App extends React.Component{
 
-    onSearchSumbit(term) {
-        console.log(`the term entered: ${term}`);
+    state = {images: []};
+
+    onSearchSumbit = async term => {
+        // takes two separate argument, the second argument is used for configuring axios like providing your options
+      const response =  await unsplash.get('/search/photos', {
+            params: {query: term},
+        });
+        
+        this.setState({images: response.data.results});
     }
 
     render(){
         return (
             <div className="ui container" style={{marginTop: '10px'}}>
                 <SearchBar onSubmit={this.onSearchSumbit}/>
+                Found: {this.state.images.length} images
             </div>
         );
     }
